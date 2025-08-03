@@ -7,19 +7,16 @@ import cors from "cors";
 import authMiddleware from "./authMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
-import { usersDB } from "./db/usersDB.js";
 
 dotenv.config();
 
-connectMongoDB("mongodb://127.0.0.1:27017/short-url") // short-url is the database name
-  .then((res) => console.log(`Database connected!`))
-  .catch((error) => console.log(`Error in connecting database`));
-
-// connecting to user database
-usersDB;
+connectMongoDB(process.env.MONGODB_URI)
+  .then((res) => console.log(`URL Shortener Database connected!`))
+  .catch((error) => console.log(`Error in connecting URL Shortener database`));
 
 const app = express();
 app.use(cookieParser());
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -34,7 +31,8 @@ app.use("/api/user", authRoutes);
 app.use("/api/url", urlRoute);
 
 app.get("/api/urls", authMiddleware, async (req, res) => {
-  const allUrls = await urlModel.find({});
+  const getCurrentUserId = req.user._id;
+  const allUrls = await urlModel.find({ user_id: getCurrentUserId });
 
   if (!allUrls) {
     return res.status(404).json({ msg: "failed to get all the urls" });
@@ -58,3 +56,7 @@ const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server started at port: ${PORT}`);
 });
+
+// import { usersDB } from "./db/usersDB.js";
+// // connecting to user database
+// usersDB;

@@ -1,9 +1,12 @@
 import express from "express";
 import urlModel from "../models/url.js";
 import { nanoid } from "nanoid";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 async function handleURLRoute(req, res) {
-  const body = req.body;
+  const body = req.body; // frontend se url req.body mei milega
 
   if (!body.url) {
     return res
@@ -12,11 +15,12 @@ async function handleURLRoute(req, res) {
   }
 
   try {
+    const baseUrl = process.env.BASE_URL; // read from .env
     const isInDb = await urlModel.findOne({ redirectURL: body.url });
     if (isInDb) {
       return res.json({
         shortId: isInDb.shortId,
-        shortUrl: `http://localhost:4001/${isInDb.shortId}`,
+        shortUrl: `${baseUrl}/${isInDb.shortId}`,
       });
     }
 
@@ -25,10 +29,11 @@ async function handleURLRoute(req, res) {
       shortId: shortId,
       redirectURL: body.url,
       visitHistory: [],
+      user_id: req.user._id, // authMiddleware user ko req.user mei available karega
     });
 
     console.log("Successfully inserted new URL in MongoDB");
-    return res.json({ shortId, shortUrl: `http://localhost:4001/${shortId}` });
+    return res.json({ shortId, shortUrl: `${baseUrl}/${shortId}` });
   } catch (error) {
     console.error("Error in adding new URL to MongoDB:", error);
     return res.status(500).json({ result: "Internal server error" });

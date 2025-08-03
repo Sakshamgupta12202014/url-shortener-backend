@@ -5,7 +5,7 @@ import authMiddleware from "../authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", authMiddleware,handleURLRoute);
+router.post("/", authMiddleware, handleURLRoute);
 router.get("/analytics/:id", authMiddleware, getClicks);
 
 export default router

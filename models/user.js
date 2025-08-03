@@ -34,10 +34,11 @@ const userSchema = mongoose.Schema(
           "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (!@#$%^&*)",
       },
     },
-  },
-  { collection: "users" } // <-- this tells Mongoose to use the "users" collection
+  }
 );
 
 const UserModel = usersDB.model("User", userSchema);
 
 export default UserModel;
+
+// { collection: "users" } // <-- this tells Mongoose to use the "users" collection
