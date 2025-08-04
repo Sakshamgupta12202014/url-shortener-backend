@@ -20,7 +20,8 @@ export async function handleUserLogin(req, res) {
   res.cookie("uid", token, {
     maxAge: 86400000, // 1 day
     httpOnly: true, // optional, for security
-    sameSite: 'None', // for cross-origin
+    sameSite: "None", // for cross-origin
+    secure: true, // REQUIRED with sameSite: 'None'
   });
   return res
     .status(200)
