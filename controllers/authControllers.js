@@ -19,7 +19,6 @@ export async function handleUserLogin(req, res) {
   // store this jwt token in cookies
   res.cookie("uid", token, {
     maxAge: 86400000, // 1 day
-    httpOnly: true, // optional, for security
     sameSite: "None", // for cross-origin
     secure: true, // REQUIRED with sameSite: 'None'
   });
