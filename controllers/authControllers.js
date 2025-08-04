@@ -64,7 +64,8 @@ export async function handleUserLogout(req, res) {
   if (!req.cookies?.uid) return res.json({ authenticated: false, msg: "" });
 
   res.clearCookie("uid", {
-    httpOnly: true,
+    sameSite: "None",
+    secure: true,
   });
   return res.json({ msg: "logged out successfully" });
 }
