@@ -1,4 +1,5 @@
 import UserModel from "../models/user.js";
+import urlModel from "../models/url.js";
 import { setUser, getUser } from "../auth.js";
 
 export async function handleUserLogin(req, res) {
@@ -83,9 +84,13 @@ export async function handleFetchCurrentUser(req, res) {
     return res.json({ authenticated: false, msg: "User not logged in" });
   }
 
+  // if user is logged in then fetch all its urls that user has shorten
+  const fetchUrls = await urlModel.find({ user_id: _id });
+
   return res.json({
     authenticated: true,
-    user: findUser.name,
+    user: findUser,
+    urls: fetchUrls,
     msg: "User logged in",
   });
 }
